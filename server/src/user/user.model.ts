@@ -7,34 +7,37 @@ export type UserDocument = User & Document;
 @Schema({ timestamps: true })
 export class UserModel implements User {
     @Prop({
-        unique: true
+        unique: true,
+        required: true
     })
     email: string
 
-    @Prop()
+    @Prop({
+        required: true
+    })
     password: string
 
-    @Prop()
+    @Prop({ default: Roles.user })
     role: Roles
 
     @Prop()
     profilePicture: string;
-    
+
     @Prop()
     walletAddress: string;
-    
+
     @Prop()
     about: string;
-    
+
     @Prop()
     country: string;
-    
+
     @Prop()
     city: string;
-    
+
     @Prop()
     languages: [{ languageName: string; level: string; }];
-    
+
     @Prop()
     skills: [string];
 }
