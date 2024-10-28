@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/createUser.dto';
 import { HttpException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/updateUser.dto';
+import { hashPassword } from 'src/utils/jwt.util';
 
 @Injectable()
 export class UserService {
@@ -13,7 +14,9 @@ export class UserService {
     ) { }
 
     async createUser(createUserDto: CreateUserDto): Promise<UserModel> {
-        const newUser = new this.userModel(createUserDto).save();
+        const hashedPassword = await hashPassword(createUserDto.password);
+        createUserDto.password = hashedPassword;
+        const newUser = await new this.userModel(createUserDto).save();
 
         return newUser;
     }
@@ -23,11 +26,17 @@ export class UserService {
     }
 
     async getUserById(id: string): Promise<UserModel> {
-        const user = await this.userModel.findById(id);
+        const user = await this.userModel.findById(id).select('-password');
 
         if (!user) {
             throw new HttpException("User Not Found", HttpStatus.NOT_FOUND)
         }
+
+        return user;
+    }
+
+    async getUserByEmail(email:string):Promise<UserModel> {
+        const user = await this.userModel.findOne({email:email});
 
         return user;
     }

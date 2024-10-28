@@ -1,4 +1,5 @@
 import { IsArray, IsEmail, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { Roles } from "../interface/user.interface";
 
 export class CreateUserDto {
     @IsEmail()
@@ -11,7 +12,7 @@ export class CreateUserDto {
 
     @IsString()
     @IsOptional()
-    role?: string
+    role?: Roles
 
     @IsString()
     @IsOptional()
@@ -29,7 +30,6 @@ export class CreateUserDto {
     @IsOptional()
     city?: string
 
-    @IsString()
     @IsArray()
     @IsOptional()
     languages?: [{
@@ -37,9 +37,8 @@ export class CreateUserDto {
         level: string
     }]
 
-    @IsString()
     @IsArray()
     @IsOptional()
-    skills?: [string]
+    skills?: string[]
 
 }

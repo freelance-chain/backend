@@ -1,5 +1,10 @@
 
-export enum Roles { freelancer, employer, admin, user }
+export enum Roles { 
+    Freelancer = "freelancer", 
+    Employer = "employer",
+    Admin = "admin", 
+    User = "user"
+ }
 
 export interface User {
     email: string,
@@ -14,5 +19,5 @@ export interface User {
         languageName: string,
         level: string
     }],
-    skills: [string],
+    skills: string[],
 }

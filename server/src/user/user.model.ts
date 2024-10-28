@@ -5,7 +5,7 @@ import { Roles, User } from "./interface/user.interface";
 export type UserDocument = User & Document;
 
 @Schema({ timestamps: true })
-export class UserModel implements User {
+export class UserModel extends Document implements User {
     @Prop({
         unique: true,
         required: true
@@ -17,7 +17,7 @@ export class UserModel implements User {
     })
     password: string
 
-    @Prop({ default: Roles.user })
+    @Prop({ default: Roles.User })
     role: Roles
 
     @Prop()
@@ -39,7 +39,7 @@ export class UserModel implements User {
     languages: [{ languageName: string; level: string; }];
 
     @Prop()
-    skills: [string];
+    skills: string[];
 }
 
 
