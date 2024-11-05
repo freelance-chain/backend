@@ -13,6 +13,7 @@ export class JobsController {
     constructor(private readonly jobService: JobsService, private readonly contractService: ContractService) {
     }
 
+    @Roles('employer', 'admin')
     @Post()
     async createJob(@Body() createJobDto: CreateJobDto) {
         const newJob = await this.jobService.createJob(createJobDto);
@@ -21,7 +22,6 @@ export class JobsController {
     }
 
     @Public()
-    @Roles('user')
     @Get()
     async getAllJobs() {
         const jobs = await this.jobService.getAllJobs();
@@ -30,6 +30,7 @@ export class JobsController {
         return new ApiResponseDto(true, jobs)
     }
 
+    @Public()
     @Get(':jobId')
     async getJobById(@Param('jobId') jobId: string) {
         const job = await this.jobService.getJobById(jobId);
@@ -37,6 +38,7 @@ export class JobsController {
         return new ApiResponseDto(true, job)
     }
 
+    @Roles('employer', 'admin')
     @Put(':jobId')
     async updateJob(@Param('jobId') jobId: string, @Body() updateJobDto: UpdateJobDto) {
         const result = await this.jobService.updateJob(jobId, updateJobDto)
@@ -44,6 +46,7 @@ export class JobsController {
         return new ApiResponseDto(true, result)
     }
 
+    @Roles('employer', 'admin')
     @Delete(':jobId')
     async deleteJob(@Param('jobId') jobId: string) {
         const result = await this.jobService.deleteJob(jobId);
@@ -51,16 +54,18 @@ export class JobsController {
         return new ApiResponseDto(true, result)
     }
 
+    @Roles('employer', 'admin', 'freelancer')
     @Post('/complete/:jobId')
     async completeJob(@Param('jobId') jobId: Types.ObjectId) {
         const result = await this.jobService.completeJob(jobId);
-        
+
         await this.contractService.completeJob(jobId, result.freelancerWallet);
 
         return new ApiResponseDto(true, { message: "Job successfully pointed to completed and successfully delivered to blockchain", job: result });
 
     }
 
+    @Roles('employer', 'admin', 'freelancer')
     @Post('/approve/:jobId')
     async approveJob(@Param('jobId') jobId: Types.ObjectId) {
         const result = await this.jobService.approveJob(jobId);

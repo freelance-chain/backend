@@ -8,8 +8,8 @@ export class JwtRfStrategy extends PassportStrategy(Strategy, 'refresh') {
     constructor() {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            ignoreExpiration: true,
-            secretOrKey: process.env.JWT_REFRESH_SECRET || 'defaultSecretKey'
+            ignoreExpiration: false,
+            secretOrKey: process.env.REFRESH_TOKEN_SECRET || 'defaultSecretKey'
         });
     }
 

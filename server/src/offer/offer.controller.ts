@@ -6,6 +6,8 @@ import { Types } from 'mongoose';
 import { UpdateOfferDto } from './dto/updateOffer.dto';
 import { ContractService } from 'src/contract/contract.service';
 import { JobsService } from 'src/jobs/jobs.service';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('offer')
 export class OfferController {
@@ -15,6 +17,7 @@ export class OfferController {
         private readonly jobService: JobsService
     ) { }
 
+    @Roles('freelancer','admin')
     @Post()
     async createOffer(@Body() createOfferDto: CreateOfferDto) {
         const newOffer = await this.offerService.newOffer(createOfferDto);
@@ -22,6 +25,7 @@ export class OfferController {
         return new ApiResponseDto(true, newOffer)
     }
 
+    @Public()
     @Get('/user/:userId')
     async getUsersOffer(@Param('userId') userId: Types.ObjectId) {
         const offers = await this.offerService.getUsersOffer(userId);
@@ -29,6 +33,7 @@ export class OfferController {
         return new ApiResponseDto(true, offers)
     }
 
+    @Public()
     @Get(':offerId')
     async getOfferById(@Param('offerId') offerId: Types.ObjectId) {
         const offer = await this.offerService.getOfferById(offerId);
@@ -36,6 +41,7 @@ export class OfferController {
         return new ApiResponseDto(true, offer)
     }
 
+    @Roles('freelancer','admin')
     @Put(':offerId')
     async updateOffer(@Param('offerId') offerId: Types.ObjectId, @Body() updateOfferDto: UpdateOfferDto) {
         const result = await this.offerService.updateOffer(offerId, updateOfferDto)
@@ -43,6 +49,7 @@ export class OfferController {
         return new ApiResponseDto(true, result)
     }
 
+    @Roles('freelancer','admin')
     @Delete(':offerId')
     async deleteOffer(@Param('offerId') offerId: Types.ObjectId) {
         const result = await this.offerService.deleteOffer(offerId)
@@ -50,6 +57,7 @@ export class OfferController {
         return new ApiResponseDto(true, result)
     }
 
+    @Roles('employer','admin')
     @Post('/accept/:offerId')
     async acceptOffer(@Param('offerId') offerId: Types.ObjectId) {
         const offer = await this.offerService.acceptOffer(offerId);

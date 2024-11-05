@@ -3,15 +3,18 @@ import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
 import { IS_PUBLIC_KEY } from 'src/common/decorators/public.decorator';
+import * as jwt from 'jsonwebtoken'
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-    handleRequest(err: any, user: any, info: any, context: ExecutionContext, status?: any): any {
-        if (err || !user) {
-            throw err || new UnauthorizedException();
-        }        
-        return user;
-    }
+    // handleRequest(err: any, user: any, info: any, context: ExecutionContext, status?: any): any {
+    //     console.log(err);
+
+    //     if (err || !user) {
+    //         throw err || new UnauthorizedException();
+    //     }        
+    //     return user;
+    // }
     constructor(private reflector: Reflector) {
         super()
     }
@@ -25,6 +28,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
             return true;
         }
 
-        return super.canActivate(context);
+        return super.canActivate(context)
     }
 }
