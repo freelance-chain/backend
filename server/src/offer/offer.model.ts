@@ -6,7 +6,7 @@ export type OfferDocument = Offer & Document;
 
 @Schema({ timestamps: true })
 export class OfferModel extends Document implements Offer {
-    @Prop({ type: Types.ObjectId, ref: "Job", required: true })
+    @Prop({ type: Types.ObjectId, ref: "JobModel", required: true })
     jobId: Types.ObjectId;
 
     @Prop({ type: Types.ObjectId, ref: "User", required: true })
@@ -22,3 +22,5 @@ export class OfferModel extends Document implements Offer {
     status: OfferStatus;
 
 }
+
+export const OfferSchema = SchemaFactory.createForClass(OfferModel)
