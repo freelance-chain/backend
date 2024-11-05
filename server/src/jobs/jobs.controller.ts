@@ -5,6 +5,8 @@ import { ApiResponseDto } from 'src/common/dto/response.dto';
 import { UpdateJobDto } from './dto/updateJob.dto';
 import { Types } from 'mongoose';
 import { ContractService } from 'src/contract/contract.service';
+import { Public } from 'src/common/decorators/public.decorator';
+import { Roles } from 'src/common/decorators/roles.decorator';
 
 @Controller('jobs')
 export class JobsController {
@@ -18,10 +20,12 @@ export class JobsController {
         return new ApiResponseDto(true, newJob);
     }
 
+    @Public()
+    @Roles('user')
     @Get()
     async getAllJobs() {
         const jobs = await this.jobService.getAllJobs();
-        await this.contractService.getAllJobs();
+        // await this.contractService.getAllJobs();
 
         return new ApiResponseDto(true, jobs)
     }

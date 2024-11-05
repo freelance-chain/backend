@@ -6,14 +6,14 @@ import { IS_PUBLIC_KEY } from 'src/common/decorators/public.decorator';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-    // handleRequest(err: any, user: any, info: any, context: ExecutionContext, status?: any): any {        
-    //     if(err || !user ) {
-    //         throw err || new UnauthorizedException();
-    //     }
-    //     return user;
-    // }
-    constructor(private reflector:Reflector) {
-        super()    
+    handleRequest(err: any, user: any, info: any, context: ExecutionContext, status?: any): any {
+        if (err || !user) {
+            throw err || new UnauthorizedException();
+        }        
+        return user;
+    }
+    constructor(private reflector: Reflector) {
+        super()
     }
 
     canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
@@ -21,7 +21,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
             context.getHandler(),
             context.getClass()
         ])
-        if(isPublic) {
+        if (isPublic) {
             return true;
         }
 
