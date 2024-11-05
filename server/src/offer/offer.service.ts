@@ -5,6 +5,7 @@ import { Model, Types } from 'mongoose';
 import { CreateOfferDto } from './dto/createOffer.dto';
 import { UpdateOfferDto } from './dto/updateOffer.dto';
 import { ErrorResponseDto } from 'src/common/dto/error-response.dto';
+import { OfferStatus } from './interface/offer.interface';
 
 @Injectable()
 export class OfferService {
@@ -51,5 +52,19 @@ export class OfferService {
         return offer;
     }
 
+    async acceptOffer(offerId:Types.ObjectId):Promise<OfferModel> {
+        const offer = await this.offerModel.findById(offerId);
 
+        offer.status= OfferStatus.ACCEPTED
+
+        return offer;
+    }
+
+    async refuseOffer(offerId:Types.ObjectId):Promise<OfferModel> {
+        const offer = await this.offerModel.findById(offerId);
+
+        offer.status= OfferStatus.CANCELED
+
+        return offer;
+    }
 }

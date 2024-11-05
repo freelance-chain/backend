@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Model, ObjectId } from 'mongoose';
+import { Model, ObjectId, Types } from 'mongoose';
 import { JobModel } from './job.model';
 import { CreateJobDto } from './dto/createJob.dto';
 import { UpdateJobDto } from './dto/updateJob.dto';
@@ -52,7 +52,7 @@ export class JobsService {
         return { message: "Job successfully deleted!" };
     }
 
-    async acceptOffer(jobId: string, freelancer: ObjectId): Promise<any> {
+    async acceptJob(jobId: Types.ObjectId, freelancer: Types.ObjectId): Promise<JobModel> {
         const job = await this.jobModel.findById(jobId);
         if (!job) {
             throw new HttpException('Job not found!', HttpStatus.NOT_FOUND);
@@ -63,6 +63,6 @@ export class JobsService {
 
         await job.save();
 
-        return { message: "Job successfully accepted!", job }
+        return job
     }
 }

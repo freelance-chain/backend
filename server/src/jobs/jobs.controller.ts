@@ -4,10 +4,11 @@ import { CreateJobDto } from './dto/createJob.dto';
 import { ApiResponseDto } from 'src/common/dto/response.dto';
 import { UpdateJobDto } from './dto/updateJob.dto';
 import { ObjectId } from 'mongoose';
+import { ContractService } from 'src/contract/contract.service';
 
 @Controller('jobs')
 export class JobsController {
-    constructor(private readonly jobService: JobsService) {
+    constructor(private readonly jobService: JobsService, private readonly contractService:ContractService) {
     }
 
     @Post()
@@ -20,7 +21,8 @@ export class JobsController {
     @Get()
     async getAllJobs() {
         const jobs = await this.jobService.getAllJobs();
-
+        await this.contractService.getAllJobs();
+        
         return new ApiResponseDto(true, jobs)
     }
 
@@ -43,17 +45,5 @@ export class JobsController {
         const result = await this.jobService.deleteJob(jobId);
 
         return new ApiResponseDto(true, result)
-    }
-
-    @Post('/accept/:jobId')
-    async acceptJob(@Param('jobId') jobId: string, @Body() freelancer: ObjectId) {
-        const result = await this.jobService.acceptOffer(jobId, freelancer);
-
-        // connect smart contract and new job func
-        // get transaction id
-        // result.job.blockchainTransactionId = transactionId;
-        // await result.job.save();
-
-        return result
     }
 }

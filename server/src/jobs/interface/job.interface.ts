@@ -1,4 +1,4 @@
-import { ObjectId } from "mongoose";
+import { Types } from "mongoose";
 
 export enum JobStatus {
     OPEN = "open",
@@ -13,8 +13,8 @@ export interface Job {
     description: string,
     budget: number,
     skillsRequired: string[],
-    employer: ObjectId,
-    freelancer: ObjectId,
+    employer: Types.ObjectId,
+    freelancer: Types.ObjectId,
     status: JobStatus,
     blockchainTransactionId: string,
     projectType: string,
