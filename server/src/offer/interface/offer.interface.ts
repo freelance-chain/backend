@@ -8,7 +8,8 @@ export enum OfferStatus {
 
 export interface Offer {
     jobId: Types.ObjectId,
-    userId: Types.ObjectId,
+    employerWallet: string,
+    freelancerWallet: string,
     amount: number,
     description: string,
     status: OfferStatus

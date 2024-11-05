@@ -52,17 +52,44 @@ export class JobsService {
         return { message: "Job successfully deleted!" };
     }
 
-    async acceptJob(jobId: Types.ObjectId, freelancer: Types.ObjectId): Promise<JobModel> {
+    async acceptJob(jobId: Types.ObjectId, freelancerWallet: string, tx: string): Promise<JobModel> {
         const job = await this.jobModel.findById(jobId);
         if (!job) {
             throw new HttpException('Job not found!', HttpStatus.NOT_FOUND);
         }
 
-        job.freelancer = freelancer;
+        job.freelancerWallet = freelancerWallet;
         job.status = JobStatus.PROGRESS;
+        job.blockchainTransaction = tx;
 
         await job.save();
 
         return job
+    };
+
+    async completeJob(jobId: Types.ObjectId): Promise<JobModel> {
+        const job = await this.jobModel.findById(jobId);
+        if (!job) {
+            throw new HttpException('Job not found!', HttpStatus.NOT_FOUND);
+        }
+
+        job.status = JobStatus.COMPLETED;
+
+        await job.save();
+
+        return job;
+    }
+
+    async approveJob(jobId:Types.ObjectId):Promise<JobModel> {
+        const job = await this.jobModel.findById(jobId);
+        if (!job) {
+            throw new HttpException('Job not found!', HttpStatus.NOT_FOUND);
+        }
+
+        job.status = JobStatus.CLOSED;
+
+        await job.save();
+
+        return job;
     }
 }

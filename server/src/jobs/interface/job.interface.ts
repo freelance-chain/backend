@@ -13,10 +13,10 @@ export interface Job {
     description: string,
     budget: number,
     skillsRequired: string[],
-    employer: Types.ObjectId,
-    freelancer: Types.ObjectId,
+    employerWallet: string,
+    freelancerWallet: string,
     status: JobStatus,
-    blockchainTransactionId: string,
+    blockchainTransaction: string,
     projectType: string,
     desiredLevel: string,
     proposalDescription?: string

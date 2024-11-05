@@ -36,7 +36,7 @@ export class OfferService {
 
     async updateOffer(offerId: Types.ObjectId, updateOfferDto: UpdateOfferDto): Promise<any> {
         console.log(updateOfferDto);
-        
+
         const offer = await this.offerModel.findByIdAndUpdate(offerId, updateOfferDto);
         if (!offer) {
             throw new HttpException(new ErrorResponseDto('Offer not found', HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);
@@ -52,18 +52,18 @@ export class OfferService {
         return offer;
     }
 
-    async acceptOffer(offerId:Types.ObjectId):Promise<OfferModel> {
+    async acceptOffer(offerId: Types.ObjectId): Promise<OfferModel> {
         const offer = await this.offerModel.findById(offerId);
-
-        offer.status= OfferStatus.ACCEPTED
-
+        
+        offer.status = OfferStatus.ACCEPTED
+        await offer.save();
         return offer;
     }
 
-    async refuseOffer(offerId:Types.ObjectId):Promise<OfferModel> {
+    async refuseOffer(offerId: Types.ObjectId): Promise<OfferModel> {
         const offer = await this.offerModel.findById(offerId);
 
-        offer.status= OfferStatus.CANCELED
+        offer.status = OfferStatus.CANCELED
 
         return offer;
     }

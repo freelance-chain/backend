@@ -9,8 +9,11 @@ export class OfferModel extends Document implements Offer {
     @Prop({ type: Types.ObjectId, ref: "JobModel", required: true })
     jobId: Types.ObjectId;
 
-    @Prop({ type: Types.ObjectId, ref: "User", required: true })
-    userId: Types.ObjectId;
+    @Prop()
+    employerWallet: string;
+
+    @Prop()
+    freelancerWallet: string;
 
     @Prop({ required: true })
     amount: number;

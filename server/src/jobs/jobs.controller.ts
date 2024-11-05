@@ -3,12 +3,12 @@ import { JobsService } from './jobs.service';
 import { CreateJobDto } from './dto/createJob.dto';
 import { ApiResponseDto } from 'src/common/dto/response.dto';
 import { UpdateJobDto } from './dto/updateJob.dto';
-import { ObjectId } from 'mongoose';
+import { Types } from 'mongoose';
 import { ContractService } from 'src/contract/contract.service';
 
 @Controller('jobs')
 export class JobsController {
-    constructor(private readonly jobService: JobsService, private readonly contractService:ContractService) {
+    constructor(private readonly jobService: JobsService, private readonly contractService: ContractService) {
     }
 
     @Post()
@@ -22,7 +22,7 @@ export class JobsController {
     async getAllJobs() {
         const jobs = await this.jobService.getAllJobs();
         await this.contractService.getAllJobs();
-        
+
         return new ApiResponseDto(true, jobs)
     }
 
@@ -45,5 +45,25 @@ export class JobsController {
         const result = await this.jobService.deleteJob(jobId);
 
         return new ApiResponseDto(true, result)
+    }
+
+    @Post('/complete/:jobId')
+    async completeJob(@Param('jobId') jobId: Types.ObjectId) {
+        const result = await this.jobService.completeJob(jobId);
+        
+        await this.contractService.completeJob(jobId, result.freelancerWallet);
+
+        return new ApiResponseDto(true, { message: "Job successfully pointed to completed and successfully delivered to blockchain", job: result });
+
+    }
+
+    @Post('/approve/:jobId')
+    async approveJob(@Param('jobId') jobId: Types.ObjectId) {
+        const result = await this.jobService.approveJob(jobId);
+
+        await this.contractService.approveJob(jobId, result.employerWallet);
+
+        return new ApiResponseDto(true, { message: "Job successfully pointed to approved and successfully delivered to blockchain", job: result });
+
     }
 }

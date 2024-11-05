@@ -28,14 +28,11 @@ export class JobModel extends Document implements Job {
     
     @Prop({
         required:true,
-        ref:'User'
     })
-    employer: Types.ObjectId;
+    employerWallet: string;
 
-    @Prop({
-        ref:'User'
-    })
-    freelancer: Types.ObjectId;
+    @Prop()
+    freelancerWallet: string;
     
     @Prop({
         default: JobStatus.OPEN
@@ -43,7 +40,7 @@ export class JobModel extends Document implements Job {
     status: JobStatus;
     
     @Prop()
-    blockchainTransactionId: string;
+    blockchainTransaction: string;
     
     @Prop({
         required:true

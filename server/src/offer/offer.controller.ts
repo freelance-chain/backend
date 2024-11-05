@@ -54,18 +54,16 @@ export class OfferController {
     async acceptOffer(@Param('offerId') offerId: Types.ObjectId) {
         const offer = await this.offerService.acceptOffer(offerId);
 
-        // update job
-        const job = await this.jobService.acceptJob(offer.jobId, offer.userId);
-
         // connect to smart contract
         const newJobDto = {
-            id: String(job._id),
-            employer: "0x7D2e4e17049b044B1BFe1a73635469690b3610Ac",
-            employee: "0x7D2e4e17049b044B1BFe1a73635469690b3610Ac",
-            price: job.budget
+            id: String(offer.jobId),
+            employer: offer.employerWallet,
+            employee: offer.freelancerWallet,
+            price: offer.amount
         }
         const contract = await this.contractService.newJob(newJobDto);
-        console.log(contract);
+
+        const job = await this.jobService.acceptJob(offer.jobId, offer.freelancerWallet, contract.transactionHash);
 
         return new ApiResponseDto(true, { message: "Successfully accepted and the job created on blockchain", transaction: contract, job: job })
     }
