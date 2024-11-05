@@ -19,7 +19,7 @@ export class CreateJobDto {
 
     @IsString()
     @IsNotEmpty()
-    employer: string
+    employerWallet: string
 
     @IsString()
     @IsNotEmpty()

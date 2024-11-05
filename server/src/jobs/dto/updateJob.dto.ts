@@ -19,10 +19,6 @@ export class UpdateJobDto {
 
     @IsString()
     @IsNotEmpty()
-    employer: string
-
-    @IsString()
-    @IsNotEmpty()
     projectType: string
 
     @IsOptional()

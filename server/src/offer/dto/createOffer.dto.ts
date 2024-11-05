@@ -9,7 +9,11 @@ export class CreateOfferDto {
 
     @IsString()
     @IsNotEmpty()
-    userId: Types.ObjectId
+    employerWallet: string
+
+    @IsString()
+    @IsNotEmpty()
+    freelancerWallet: string
 
     @IsNumber()
     @IsNotEmpty()

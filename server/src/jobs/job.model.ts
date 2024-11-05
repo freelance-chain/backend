@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose, { Document } from 'mongoose'
+import mongoose, { Document, Types } from 'mongoose'
 import { Job, JobStatus } from "./interface/job.interface";
 
 export type JobDocument = Job & Document;
@@ -28,14 +28,11 @@ export class JobModel extends Document implements Job {
     
     @Prop({
         required:true,
-        ref:'User'
     })
-    employer: mongoose.Schema.Types.ObjectId;
+    employerWallet: string;
 
-    @Prop({
-        ref:'User'
-    })
-    freelancer: mongoose.Schema.Types.ObjectId;
+    @Prop()
+    freelancerWallet: string;
     
     @Prop({
         default: JobStatus.OPEN
@@ -43,7 +40,7 @@ export class JobModel extends Document implements Job {
     status: JobStatus;
     
     @Prop()
-    blockchainTransactionId: string;
+    blockchainTransaction: string;
     
     @Prop({
         required:true

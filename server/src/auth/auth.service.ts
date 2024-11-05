@@ -53,7 +53,7 @@ export class AuthService {
     private async getTokens(userId: string, userRole?: string): Promise<AuthResponse> {
         const jwtPayload = {
             sub: userId,
-            role: userRole
+            roles: userRole
         };
 
         const [access_token, refresh_token] = await Promise.all([

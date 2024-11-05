@@ -3,13 +3,17 @@ import { JobsService } from './jobs.service';
 import { CreateJobDto } from './dto/createJob.dto';
 import { ApiResponseDto } from 'src/common/dto/response.dto';
 import { UpdateJobDto } from './dto/updateJob.dto';
-import { ObjectId } from 'mongoose';
+import { Types } from 'mongoose';
+import { ContractService } from 'src/contract/contract.service';
+import { Public } from 'src/common/decorators/public.decorator';
+import { Roles } from 'src/common/decorators/roles.decorator';
 
 @Controller('jobs')
 export class JobsController {
-    constructor(private readonly jobService: JobsService) {
+    constructor(private readonly jobService: JobsService, private readonly contractService: ContractService) {
     }
 
+    @Roles('employer', 'admin')
     @Post()
     async createJob(@Body() createJobDto: CreateJobDto) {
         const newJob = await this.jobService.createJob(createJobDto);
@@ -17,13 +21,16 @@ export class JobsController {
         return new ApiResponseDto(true, newJob);
     }
 
+    @Public()
     @Get()
     async getAllJobs() {
         const jobs = await this.jobService.getAllJobs();
+        // await this.contractService.getAllJobs();
 
         return new ApiResponseDto(true, jobs)
     }
 
+    @Public()
     @Get(':jobId')
     async getJobById(@Param('jobId') jobId: string) {
         const job = await this.jobService.getJobById(jobId);
@@ -31,6 +38,7 @@ export class JobsController {
         return new ApiResponseDto(true, job)
     }
 
+    @Roles('employer', 'admin')
     @Put(':jobId')
     async updateJob(@Param('jobId') jobId: string, @Body() updateJobDto: UpdateJobDto) {
         const result = await this.jobService.updateJob(jobId, updateJobDto)
@@ -38,6 +46,7 @@ export class JobsController {
         return new ApiResponseDto(true, result)
     }
 
+    @Roles('employer', 'admin')
     @Delete(':jobId')
     async deleteJob(@Param('jobId') jobId: string) {
         const result = await this.jobService.deleteJob(jobId);
@@ -45,15 +54,25 @@ export class JobsController {
         return new ApiResponseDto(true, result)
     }
 
-    @Post('/accept/:jobId')
-    async acceptJob(@Param('jobId') jobId: string, @Body() freelancer: ObjectId) {
-        const result = await this.jobService.acceptOffer(jobId, freelancer);
+    @Roles('employer', 'admin', 'freelancer')
+    @Post('/complete/:jobId')
+    async completeJob(@Param('jobId') jobId: Types.ObjectId) {
+        const result = await this.jobService.completeJob(jobId);
 
-        // connect smart contract and new job func
-        // get transaction id
-        // result.job.blockchainTransactionId = transactionId;
-        // await result.job.save();
+        await this.contractService.completeJob(jobId, result.freelancerWallet);
 
-        return result
+        return new ApiResponseDto(true, { message: "Job successfully pointed to completed and successfully delivered to blockchain", job: result });
+
+    }
+
+    @Roles('employer', 'admin', 'freelancer')
+    @Post('/approve/:jobId')
+    async approveJob(@Param('jobId') jobId: Types.ObjectId) {
+        const result = await this.jobService.approveJob(jobId);
+
+        await this.contractService.approveJob(jobId, result.employerWallet);
+
+        return new ApiResponseDto(true, { message: "Job successfully pointed to approved and successfully delivered to blockchain", job: result });
+
     }
 }
