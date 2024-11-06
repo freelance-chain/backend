@@ -28,4 +28,8 @@ export class UpdateJobDto {
     @IsOptional()
     @IsString()
     proposalDescription?: string
+
+    @IsArray()
+    @IsString()
+    categoryIds: string[]
 }
