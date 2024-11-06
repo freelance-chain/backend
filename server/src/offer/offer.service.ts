@@ -35,9 +35,7 @@ export class OfferService {
     }
 
     async updateOffer(offerId: Types.ObjectId, updateOfferDto: UpdateOfferDto): Promise<any> {
-        console.log(updateOfferDto);
-
-        const offer = await this.offerModel.findByIdAndUpdate(offerId, updateOfferDto);
+        const offer = (await this.offerModel.findByIdAndUpdate(offerId, updateOfferDto)).save();
         if (!offer) {
             throw new HttpException(new ErrorResponseDto('Offer not found', HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);
         }

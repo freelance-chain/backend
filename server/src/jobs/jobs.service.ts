@@ -35,7 +35,7 @@ export class JobsService {
     }
 
     async updateJob(jobId: string, updateJobDto: UpdateJobDto): Promise<any> {
-        const job = await this.jobModel.findByIdAndUpdate(jobId, updateJobDto);
+        const job = (await this.jobModel.findByIdAndUpdate(jobId, updateJobDto)).save();
         if (!job) {
             throw new HttpException(new ErrorResponseDto('Job not found!', HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);
         }
