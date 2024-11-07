@@ -19,5 +19,6 @@ export interface Job {
     blockchainTransaction: string,
     projectType: string,
     desiredLevel: string,
-    proposalDescription?: string
+    proposalDescription?: string,
+    categoryIds:Types.ObjectId[]
 }

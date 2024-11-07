@@ -53,6 +53,8 @@ export class JobModel extends Document implements Job {
     @Prop()
     proposalDescription?: string;
 
+    @Prop({required:true, ref:'CategoryModel'})
+    categoryIds: Types.ObjectId[];
 }
 
 

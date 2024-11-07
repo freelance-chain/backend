@@ -42,7 +42,7 @@ export class UserService {
     }
 
     async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<any> {
-        const user = await this.userModel.findByIdAndUpdate(id, updateUserDto);
+        const user = (await this.userModel.findByIdAndUpdate(id, updateUserDto)).save();
         if (!user) {
             throw new HttpException("User Not Found", HttpStatus.NOT_FOUND)
         }

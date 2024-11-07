@@ -32,4 +32,8 @@ export class CreateJobDto {
     @IsOptional()
     @IsString()
     proposalDescription?: string
+
+    @IsArray()
+    @IsNotEmpty()
+    categoryIds: string[]
 }
